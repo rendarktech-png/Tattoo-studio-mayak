@@ -10,10 +10,10 @@ const link = {
 };
 const nav = [['Работы', '#works'], ['Стоимость', '#prices'], ['О коллективе', '#about'], ['Запись', '#booking'], ['Вопросы', '#faq'], ['Контакты', '#contacts']] as const;
 
-function Photo({ src, alt, onLoaded }: { src: string; alt: string; onLoaded?: (value: boolean) => void }) {
+function Photo({ src, alt, onLoaded, priority = false }: { src: string; alt: string; onLoaded?: (value: boolean) => void; priority?: boolean }) {
   const [failed, setFailed] = useState(false);
   useEffect(() => { setFailed(false); onLoaded?.(false); }, [src]);
-  return <span className={`photo${failed ? ' photo--failed' : ''}`}><img src={src} alt={alt} loading="eager" onLoad={() => onLoaded?.(true)} onError={() => { setFailed(true); onLoaded?.(false); }} /></span>;
+  return <span className={`photo${failed ? ' photo--failed' : ''}`}><img src={src} alt={alt} loading={priority ? "eager" : "lazy"} decoding="async" fetchPriority={priority ? "high" : "auto"} onLoad={() => onLoaded?.(true)} onError={() => { setFailed(true); onLoaded?.(false); }} /></span>;
 }
 
 function Header() {
@@ -33,7 +33,7 @@ function Header() {
 }
 function Hero() { return <section className="hero shell" aria-labelledby="hero-title">
   <div className="hero-copy"><p className="eyebrow">НОВОСИБИРСК ／ ТАТУ-КОЛЛЕКТИВ</p><h1 id="hero-title">МАЯК</h1><p className="hero-subtitle">Татуировки<br />со своим почерком.</p><p className="hero-text">Обсудим вашу идею и разработаем индивидуальный эскиз с учётом формы, масштаба и места нанесения.</p><div className="hero-actions"><a className="button button--solid" href="#works">Смотреть работы ↗</a><a className="button button--outline" href={link.telegram} target="_blank" rel="noreferrer">Обсудить татуировку ↗</a></div></div>
-  <div className="hero-visual" aria-hidden="true">{heroPhotos.map(src => <Photo key={src} src={src} alt="" />)}</div>
+  <div className="hero-visual" aria-hidden="true">{heroPhotos.map(src => <Photo key={src} src={src} alt="" priority />)}</div>
   <div className="hero-baseline"><span>MAYAK TATTOO COLLECTIVE</span><span>12 МАСТЕРОВ · 10 ЛЕТ ВМЕСТЕ</span></div>
 </section>; }
 
