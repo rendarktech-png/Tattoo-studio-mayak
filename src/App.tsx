@@ -11,9 +11,9 @@ const link = {
 const nav = [['Работы', '#works'], ['Стоимость', '#prices'], ['О коллективе', '#about'], ['Запись', '#booking'], ['Вопросы', '#faq'], ['Контакты', '#contacts']] as const;
 
 function Photo({ src, alt, onLoaded }: { src: string; alt: string; onLoaded?: (value: boolean) => void }) {
-  const [loaded, setLoaded] = useState(false);
-  useEffect(() => { setLoaded(false); onLoaded?.(false); }, [src]);
-  return <span className="photo"><img src={src} alt={alt} loading="lazy" className={loaded ? 'is-loaded' : ''} onLoad={() => { setLoaded(true); onLoaded?.(true); }} onError={() => { setLoaded(false); onLoaded?.(false); }} /></span>;
+  const [failed, setFailed] = useState(false);
+  useEffect(() => { setFailed(false); onLoaded?.(false); }, [src]);
+  return <span className={`photo${failed ? ' photo--failed' : ''}`}><img src={src} alt={alt} loading="eager" onLoad={() => onLoaded?.(true)} onError={() => { setFailed(true); onLoaded?.(false); }} /></span>;
 }
 
 function Header() {
